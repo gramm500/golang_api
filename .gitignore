@@ -1,0 +1,4 @@
+.idea
+/vendor/
+mongodata
+golang_api

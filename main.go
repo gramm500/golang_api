@@ -1,11 +1,11 @@
 package main
 
 import (
-	"context"
-	"fmt"
+	"github.com/gin-gonic/gin"
 	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
-	"time"
+	"golang_api/controllers"
+	"log"
 )
 
 type User struct {
@@ -16,11 +16,17 @@ type User struct {
 
 var client *mongo.Client
 
+var (
+	router = gin.Default()
+)
+
+type LoginForm struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
 func main() {
-	ctx, err := context.WithTimeout(context.Background(), 10*time.Second)
-	if err != nil {
-		panic(err)
-	}
-	client, err := mongo.Connect(ctx, "")
-	fmt.Println(client)
+	router.POST("/register", controllers.Register)
+	router.GET("/hi", controllers.Welcome)
+	log.Fatal(router.Run(":3000"))
 }
