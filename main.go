@@ -20,11 +20,6 @@ var (
 	router = gin.Default()
 )
 
-type LoginForm struct {
-	Email    string `json:"email"`
-	Password string `json:"password"`
-}
-
 func main() {
 	router.POST("/register", controllers.Register)
 	router.GET("/hi", controllers.Welcome)
