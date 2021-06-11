@@ -65,9 +65,9 @@ func Register(ctx *gin.Context) {
 
 	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
 
-	tokenString, error := token.SignedString([]byte("secret"))
-	if error != nil {
-		fmt.Println(error)
+	tokenString, err := token.SignedString([]byte("secret"))
+	if err != nil {
+		fmt.Println(err)
 	}
 
 	ctx.JSON(http.StatusCreated, tokenString)
