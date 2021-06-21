@@ -2,26 +2,38 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"go.mongodb.org/mongo-driver/bson/primitive"
-	"go.mongodb.org/mongo-driver/mongo"
+	"github.com/joho/godotenv"
+	"github.com/kelseyhightower/envconfig"
 	"golang_api/controllers"
+	"golang_api/models"
 	"log"
 )
 
-type User struct {
-	ID    primitive.ObjectID `json:"_id,omitempty" bson:"_id,omitempty"`
-	Email string             `json:"email,omitempty" bson:"email,omitempty"`
-	Role  string             `json:"role,omitempty" bson:"role,omitempty"`
-}
-
-var client *mongo.Client
-
-var (
-	router = gin.Default()
-)
-
 func main() {
+	err := godotenv.Load("./../.env")
+	if err != nil {
+		panic(err)
+	}
+
+	var config models.Config
+	err = envconfig.Process("", &config)
+	if err != nil {
+		panic(err)
+	}
+
+	di := models.NewDI(config)
+
+	router := SetupRouter(di)
+
 	router.POST("/register", controllers.Register)
 	router.GET("/hi", controllers.Welcome)
 	log.Fatal(router.Run(":3000"))
+}
+
+func SetupRouter(di *models.DI) *gin.Engine {
+	r := gin.New()
+	r.Use(gin.Recovery())
+	handlers.RegisterRoutes(r, di)
+	r.NoRoute(defaultHandler.Default)
+	return r
 }

@@ -31,7 +31,7 @@ func Register(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, "Something went horribly wrong")
 		return
 	}
-	fmt.Println(passwd)
+
 	u := models.User{
 		Email:    req.Email,
 		Password: string(passwd),
