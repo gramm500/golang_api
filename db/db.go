@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func InitMongoConnection(host string, db string) *mongo.Database {
+func InitMongoConnection(host string, db string) (*mongo.Database, context.Context) {
 	c, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
 	client, err := mongo.Connect(c, options.Client().ApplyURI(host))
@@ -15,5 +15,5 @@ func InitMongoConnection(host string, db string) *mongo.Database {
 		panic(err)
 	}
 
-	return client.Database(db)
+	return client.Database(db), c
 }

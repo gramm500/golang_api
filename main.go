@@ -4,7 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 	"github.com/kelseyhightower/envconfig"
-	"golang_api/controllers"
+	"golang_api/handlers"
 	"golang_api/models"
 	"log"
 )
@@ -24,9 +24,6 @@ func main() {
 	di := models.NewDI(config)
 
 	router := SetupRouter(di)
-
-	router.POST("/register", controllers.Register)
-	router.GET("/hi", controllers.Welcome)
 	log.Fatal(router.Run(":3000"))
 }
 
@@ -34,6 +31,5 @@ func SetupRouter(di *models.DI) *gin.Engine {
 	r := gin.New()
 	r.Use(gin.Recovery())
 	handlers.RegisterRoutes(r, di)
-	r.NoRoute(defaultHandler.Default)
 	return r
 }
