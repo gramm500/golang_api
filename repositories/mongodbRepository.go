@@ -4,7 +4,6 @@ import (
 	"context"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
-	"golang_api/models"
 )
 
 type MongoDbRepository struct {
@@ -20,9 +19,9 @@ func (r *MongoDbRepository) newCollection(collection string) *mongo.Collection {
 	return r.DB.Collection(collection)
 }
 
-func (r *MongoDbRepository) CreateUser(user *models.User) (*mongo.InsertOneResult, error) {
+func (r *MongoDbRepository) CreateUser(email string, password string, role string) (*mongo.InsertOneResult, error) {
 	collection := r.newCollection("users")
-	res, err := collection.InsertOne(r.Ctx, bson.D{{"email", user.Email}, {"password", user.Password}, {"role", user.Role}})
+	res, err := collection.InsertOne(r.Ctx, bson.D{{"email", email}, {"password", password}, {"role", role}})
 	if err != nil {
 		return nil, err
 	}

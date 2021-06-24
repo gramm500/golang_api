@@ -43,7 +43,7 @@ func (h *RegisterHandler) Register(ctx *gin.Context) {
 		Role:     "admin",
 	}
 
-	res, err := h.MongoRepository.CreateUser(&u)
+	res, err := h.MongoRepository.CreateUser(u.Email, u.Password, u.Role)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, "something went horribly wrong")
 		return
