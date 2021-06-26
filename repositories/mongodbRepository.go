@@ -21,7 +21,7 @@ func (r *MongoDbRepository) newCollection(collection string) *mongo.Collection {
 
 func (r *MongoDbRepository) CreateUser(email string, password string, role string) (*mongo.InsertOneResult, error) {
 	collection := r.newCollection("users")
-	res, err := collection.InsertOne(r.Ctx, bson.D{{"email", email}, {"password", password}, {"role", role}})
+	res, err := collection.InsertOne(context.Background(), bson.D{{"email", email}, {"password", password}, {"role", role}})
 	if err != nil {
 		return nil, err
 	}

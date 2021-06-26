@@ -1,6 +1,7 @@
 package handlers
 
 import (
+	"bytes"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/assert/v2"
 	"github.com/joho/godotenv"
@@ -8,6 +9,7 @@ import (
 	"golang_api/models"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"testing"
 )
 
@@ -27,10 +29,18 @@ func TestRegisterHandler_Register(t *testing.T) {
 	testRouter := gin.New()
 	testDi := models.NewDI(config)
 	RegisterRoutes(testRouter, testDi)
+	buffer := new(bytes.Buffer)
+	params := url.Values{}
+	params.Set("email", "email@example.com")
+	params.Set("password", "secret123")
+	buffer.WriteString(params.Encode())
 
 	w := httptest.NewRecorder()
-	req, err := http.NewRequest("GET", "/hi", nil)
-
+	req, err := http.NewRequest(http.MethodPost, "/register", buffer)
+	if err != nil {
+		panic(err)
+	}
+	req.Header.Set("content-type", "application/x-www-form-urlencoded")
 	testRouter.ServeHTTP(w, req)
-	assert.Equal(t, http.StatusOK, w.Code)
+	assert.Equal(t, http.StatusCreated, w.Code)
 }

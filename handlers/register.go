@@ -67,5 +67,5 @@ func (h *RegisterHandler) Register(ctx *gin.Context) {
 		fmt.Println(err)
 	}
 
-	ctx.JSON(http.StatusCreated, tokenString)
+	ctx.JSON(http.StatusCreated, "token: "+tokenString)
 }
