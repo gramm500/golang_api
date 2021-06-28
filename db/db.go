@@ -14,6 +14,11 @@ func InitMongoConnection(host string, db string) (*mongo.Database, context.Conte
 	if err != nil {
 		panic(err)
 	}
+	//defer func() {
+	//	if err = client.Disconnect(c); err != nil {
+	//		panic(err)
+	//	}
+	//}()
 
 	return client.Database(db), c
 }

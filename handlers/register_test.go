@@ -31,7 +31,7 @@ func TestRegisterHandler_Register(t *testing.T) {
 	RegisterRoutes(testRouter, testDi)
 	buffer := new(bytes.Buffer)
 	params := url.Values{}
-	params.Set("email", "email@example.com")
+	params.Set("email", "example@gmail.com")
 	params.Set("password", "secret123")
 	buffer.WriteString(params.Encode())
 

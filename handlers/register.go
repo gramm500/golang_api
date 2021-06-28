@@ -1,18 +1,16 @@
 package handlers
 
 import (
-	"fmt"
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
 	"golang_api/models"
 	"golang_api/repositories"
+	"golang_api/token"
 	"net/http"
-	"time"
 )
 
 type RegisterForm struct {
-	Email    string `form:"email" binding:"required"`
+	Email    string `form:"email" binding:"required,email"`
 	Password string `form:"password" binding:"required"`
 }
 
@@ -49,22 +47,9 @@ func (h *RegisterHandler) Register(ctx *gin.Context) {
 		return
 	}
 
-	expiresAt := time.Now().Add(time.Minute * 100000).Unix()
-
-	tk := models.Token{
-		UserID: res.InsertedID,
-		Email:  u.Email,
-		Role:   u.Role,
-		StandardClaims: &jwt.StandardClaims{
-			ExpiresAt: expiresAt,
-		},
-	}
-
-	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
-
-	tokenString, err := token.SignedString([]byte("secret"))
+	tokenString, err := token.CreateToken(res.InsertedID, u)
 	if err != nil {
-		fmt.Println(err)
+		ctx.JSON(http.StatusInternalServerError, "something went horribly wrong")
 	}
 
 	ctx.JSON(http.StatusCreated, "token: "+tokenString)

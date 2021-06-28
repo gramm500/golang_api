@@ -27,3 +27,9 @@ func (r *MongoDbRepository) CreateUser(email string, password string, role strin
 	}
 	return res, nil
 }
+
+func (r *MongoDbRepository) FindUser(email string) *mongo.SingleResult {
+	collection := r.newCollection("users")
+	res := collection.FindOne(context.Background(), bson.D{{"email", email}})
+	return res
+}
