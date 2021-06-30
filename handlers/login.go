@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"github.com/gin-gonic/gin"
+	"golang.org/x/crypto/bcrypt"
 	"golang_api/models"
 	"golang_api/repositories"
 	"golang_api/token"
@@ -33,6 +34,10 @@ func (h *LoginHandler) Login(ctx *gin.Context) {
 	err = h.MongoRepository.FindUser(req.Email).Decode(&user)
 	if err != nil {
 		ctx.JSON(http.StatusNotFound, "no users with this email found")
+	}
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password))
+	if err != nil {
+		ctx.JSON(http.StatusUnauthorized, "wrong password")
 	}
 
 	userToken, err := token.CreateToken(user.Id, user)
