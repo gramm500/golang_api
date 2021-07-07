@@ -23,7 +23,6 @@ func NewLoginHandler(di *models.DI) *LoginHandler {
 }
 
 func (h *LoginHandler) Login(ctx *gin.Context) {
-
 	req := &RegisterForm{}
 	err := ctx.ShouldBind(req)
 	if err != nil {
@@ -38,6 +37,7 @@ func (h *LoginHandler) Login(ctx *gin.Context) {
 	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(req.Password))
 	if err != nil {
 		ctx.JSON(http.StatusUnauthorized, "wrong password")
+		return
 	}
 
 	userToken, err := token.CreateToken(user.Id, user)

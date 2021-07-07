@@ -1,6 +1,6 @@
 package models
 
-import jwt "github.com/dgrijalva/jwt-go"
+import "github.com/golang-jwt/jwt"
 
 type Token struct {
 	UserID interface{}

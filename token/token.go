@@ -1,7 +1,7 @@
 package token
 
 import (
-	"github.com/dgrijalva/jwt-go"
+	"github.com/golang-jwt/jwt"
 	"golang_api/models"
 	"time"
 )
@@ -18,7 +18,7 @@ func CreateToken(id interface{}, u models.User) (string, error) {
 		},
 	}
 
-	token := jwt.NewWithClaims(jwt.GetSigningMethod("HS256"), tk)
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, tk)
 
 	tokenString, err := token.SignedString([]byte("secret"))
 	if err != nil {
